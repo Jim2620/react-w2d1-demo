@@ -8,24 +8,58 @@ export default class Counter extends Component {
       count: 10,
       name: "Jim",
     };
-    this.handleIncrement = this.handleIncrement.bind(this);
   }
 
-  handleIncrement() {
+  // when defining a method, use the arrow function syntax for proper 'this' binding
+  handleIncrement = () => {
     console.log("hello world");
-    // update the count variable
-    this.setState((currentState) => {
-      console.log(currentState);
-    });
-  }
+    if (this.state.count < 20) {
+      // update the count variable
+      this.setState((currentState) => {
+        const { count } = currentState;
+        return {
+          count: count + 1,
+          name: (currentState.name = "Jim"),
+        };
+      });
+    }
+  };
+
+  handleDecrement = () => {
+    // check what the current count is, if it's 0, then don't decrement
+    if (this.state.count > 0) {
+      this.setState((currentState) => {
+        return {
+          count: currentState.count - 1,
+        };
+      });
+    }
+  };
+
+  resetButton = () => {
+    this.setState({ count: 10 });
+  };
 
   render() {
+    let counterClass;
+
+    if (this.state.count > 10) {
+      counterClass = "Counter-active";
+    } else if (this.state.count <= 5) {
+      counterClass = "Counter-active-green";
+    }
+
+    const toggleClass = this.state.count === 10 ? "Counter-hide" : "";
+
     return (
-      <div ClassName="Counter-container">
-        Counter
+      <div>
         <h1>{this.state.name}'s Counting App</h1>
-        <h2>{this.state.count}</h2>
+        <h2 className={counterClass}>{this.state.count}</h2>
         <button onClick={this.handleIncrement}>Increment (+)</button>
+        <button onClick={this.handleDecrement}>Decrement (-)</button>
+        <button className={toggleClass} onClick={this.resetButton}>
+          Reset
+        </button>
       </div>
     );
   }
